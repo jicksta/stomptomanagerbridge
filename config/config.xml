@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    
+    <bridge>
+        <!-- Retry timeout between exceptions in number of seconds. -->
+        <retry-timeout>3</retry-timeout>
+    </bridge>
+    
+    <stomp>
+        <host>twinners.us</host>
+        <port>61613</port>
+        <username>testing</username>
+        <password>f13fa60c2ba5</password>
+        
+        <subscribe-to>ami</subscribe-to>
+    </stomp>
+    
+    <ami>
+        <host>xenu</host>
+        <port>5038</port>
+        <username>jicksta</username>
+        <password>ohairoflcopter</password>
+    </ami>
+    
+</config>
