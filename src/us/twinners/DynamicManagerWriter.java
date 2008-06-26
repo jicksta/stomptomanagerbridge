@@ -22,7 +22,7 @@ public class DynamicManagerWriter extends ManagerWriterImpl {
     public void sendAction(final ManagerAction managerAction, final String internalActionId) throws IOException {
 
         if (managerAction instanceof DynamicManagerAction) {
-
+            System.out.println("Handling a DynamicManagerAction");
             DynamicManagerAction dynamicAction = (DynamicManagerAction) managerAction;
             String actionName = dynamicAction.getAction();
             Map<String, String> properties = dynamicAction.properties;
@@ -30,14 +30,14 @@ public class DynamicManagerWriter extends ManagerWriterImpl {
             StringBuilder buffer = new StringBuilder();
             // WHERE I LEFT OFF: SUPER MUST BE CALLED. THIS METHOD IS NOT DONE BUILDING A MANAGER ACTION PROPERLY. WHAT ELSE DID I LEVAE OUT? CHECK OTHER MANAGERACTION IMPLEMENTATION.
             // Add the action name
-            appendKeyValue(buffer, "Action: ", actionName);
+            appendKeyValue(buffer, "Action", actionName);
 
             // Ensure we've sent an ActionID through
             if (internalActionId != null) {
                 String actionId = ManagerUtil.addInternalActionId(dynamicAction.getActionId(), internalActionId);
-                appendKeyValue(buffer, "actionid: ", actionId);
+                appendKeyValue(buffer, "actionid", actionId);
             } else if (dynamicAction.getActionId() != null) {
-                appendKeyValue(buffer, "actionid: ", dynamicAction.getActionId());
+                appendKeyValue(buffer, "actionid", dynamicAction.getActionId());
             }
 
             // Inject across our dynamic fields building up a String.
@@ -46,12 +46,14 @@ public class DynamicManagerWriter extends ManagerWriterImpl {
                 Map.Entry<String, String> pairs = (Map.Entry<String, String>) propertyIterator.next();
                 appendKeyValue(buffer, pairs.getKey(), pairs.getValue());
             }
+            buffer.append(LINE_SEPARATOR);
             String action = buffer.toString();
 
             if (this.socket == null) {
                 throw new IllegalStateException("Unable to send action: socket is null");
             }
 
+            System.out.println("Final action\n" + action);
             // Finally write to the socket
             synchronized (this.socket) {
                 this.socket.write(action);
