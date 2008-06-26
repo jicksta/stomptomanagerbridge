@@ -42,7 +42,7 @@ public class StompToManagerBridge implements ManagerEventListener,
     // Forward Asterisk Manager Interface events to Stomp
     public void onManagerEvent(ManagerEvent event) {
         System.out.println("Handling event: " + event.toString());
-        this.stompClient.send("ami", event.toString());
+        this.stompClient.send("ami", "event", event.properties());
     }
 
     // Forward Stomp messages to the Asterisk Manager Interface

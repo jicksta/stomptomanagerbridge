@@ -1,5 +1,9 @@
 package us.twinners;
 
+import java.io.IOException;
+
+import org.asteriskjava.manager.AuthenticationFailedException;
+import org.asteriskjava.manager.TimeoutException;
 import org.asteriskjava.manager.internal.ManagerConnectionImpl;
 import org.asteriskjava.manager.internal.ManagerWriter;
 import us.twinners.DynamicManagerWriter;
@@ -21,6 +25,10 @@ public class DynamicManagerConnection extends ManagerConnectionImpl {
     @Override
     protected ManagerWriter createWriter() {
         return new DynamicManagerWriter();
+    }
+
+    public void login() throws IOException, AuthenticationFailedException, TimeoutException {
+        super.login();
     }
 
 }

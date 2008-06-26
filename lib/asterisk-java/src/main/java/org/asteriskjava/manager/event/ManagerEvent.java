@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.EventObject;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.asteriskjava.util.ReflectionUtil;
@@ -37,25 +38,21 @@ import org.asteriskjava.util.ReflectionUtil;
  * @author srt
  * @version $Id: ManagerEvent.java 938 2007-12-31 03:23:38Z srt $
  */
-public abstract class ManagerEvent extends EventObject implements Serializable
-{
+public abstract class ManagerEvent extends EventObject implements Serializable {
+
     /**
      * Serializable version identifier.
      */
     static final long serialVersionUID = 1L;
-
     /**
      * AMI authorization class.
      */
     private String privilege;
-
     /**
      * The point in time this event has been received from the Asterisk server.
      */
     private Date dateReceived;
-
     private Double timestamp;
-
     /**
      * The server from which this event has been received (only used with AstManProxy).
      */
@@ -64,8 +61,7 @@ public abstract class ManagerEvent extends EventObject implements Serializable
     /**
      * @param source
      */
-    public ManagerEvent(Object source)
-    {
+    public ManagerEvent(Object source) {
         super(source);
 
     }
@@ -78,16 +74,14 @@ public abstract class ManagerEvent extends EventObject implements Serializable
      * (for example ConnectEvent and DisconnectEvent) may return
      * <code>null</code>.
      */
-    public Date getDateReceived()
-    {
+    public Date getDateReceived() {
         return dateReceived;
     }
 
     /**
      * Sets the point in time this event was received from the asterisk server.
      */
-    public void setDateReceived(Date dateReceived)
-    {
+    public void setDateReceived(Date dateReceived) {
         this.dateReceived = dateReceived;
     }
 
@@ -101,8 +95,7 @@ public abstract class ManagerEvent extends EventObject implements Serializable
      *
      * @since 0.2
      */
-    public String getPrivilege()
-    {
+    public String getPrivilege() {
         return privilege;
     }
 
@@ -111,8 +104,7 @@ public abstract class ManagerEvent extends EventObject implements Serializable
      *
      * @since 0.2
      */
-    public void setPrivilege(String privilege)
-    {
+    public void setPrivilege(String privilege) {
         this.privilege = privilege;
     }
 
@@ -129,8 +121,7 @@ public abstract class ManagerEvent extends EventObject implements Serializable
      * @return the timestamp for this event.
      * @since 0.3
      */
-    public final Double getTimestamp()
-    {
+    public final Double getTimestamp() {
         return timestamp;
     }
 
@@ -140,8 +131,7 @@ public abstract class ManagerEvent extends EventObject implements Serializable
      * @param timestamp the timestamp to set.
      * @since 0.3
      */
-    public final void setTimestamp(Double timestamp)
-    {
+    public final void setTimestamp(Double timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -155,8 +145,7 @@ public abstract class ManagerEvent extends EventObject implements Serializable
      *         instead of AstManProxy.
      * @since 1.0.0
      */
-    public final String getServer()
-    {
+    public final String getServer() {
         return server;
     }
 
@@ -166,39 +155,51 @@ public abstract class ManagerEvent extends EventObject implements Serializable
      * @param server the name of the Asterisk server from which this event has been received.
      * @since 1.0.0
      */
-    public final void setServer(String server)
-    {
+    public final void setServer(String server) {
         this.server = server;
     }
 
+    public Map<String, String> properties() {
+        Map<String, Method> getters = ReflectionUtil.getGetters(getClass());
+        Map<String, String> returnedValue = new HashMap<String, String>(10);
+        returnedValue.put("classname", getClass().getName());
+
+        for (String attribute : getters.keySet()) {
+            if ("class".equals(attribute) || "datereceived".equals(attribute) || "privilege".equals(attribute) || "source".equals(attribute)) {
+                continue;
+            }
+            try {
+                Object value;
+                value = getters.get(attribute).invoke(this);
+                returnedValue.put(attribute, value.toString());
+            } catch (Exception e) {
+                // swallow
+            }
+        }
+        return returnedValue;
+    }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuffer sb;
         Map<String, Method> getters;
 
         sb = new StringBuffer(getClass().getName() + "[");
         sb.append("dateReceived=").append(getDateReceived()).append(",");
-        if (getPrivilege() != null)
-        {
+        if (getPrivilege() != null) {
             sb.append("privilege='").append(getPrivilege()).append("',");
         }
         getters = ReflectionUtil.getGetters(getClass());
-        for (String attribute : getters.keySet())
-        {
-            if ("class".equals(attribute) || "datereceived".equals(attribute) || "privilege".equals(attribute)
-                    || "source".equals(attribute))
-            {
+        for (String attribute : getters.keySet()) {
+            if ("class".equals(attribute) || "datereceived".equals(attribute) || "privilege".equals(attribute) || "source".equals(attribute)) {
                 continue;
             }
 
-            try
-            {
+            try {
                 Object value;
                 value = getters.get(attribute).invoke(this);
                 sb.append(attribute).append("='").append(value).append("',");
-            }
-            catch (Exception e) // NOPMD
+            } catch (Exception e) // NOPMD
             {
                 // swallow
             }
