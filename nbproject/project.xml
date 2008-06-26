@@ -7,7 +7,6 @@
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <source-roots>
                 <root id="src.dir"/>
-                <root id="src.java.dir" name="Asterisk-Java"/>
                 <root id="src.java2.dir" name="Gozirra"/>
             </source-roots>
             <test-roots>
