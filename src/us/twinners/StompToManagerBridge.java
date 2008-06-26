@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package us.twinners;
 
 import java.io.IOException;
@@ -29,16 +25,17 @@ public class StompToManagerBridge implements ManagerEventListener,
         net.ser1.stomp.Listener, SendActionCallback {
 
     public final static int RECONNECT_RETRY_TIMEOUT_IN_SECONDS = 3;
+    
     private DynamicManagerConnection managerConnection;
     private Client stompClient;
 
     public StompToManagerBridge(Client stompClient) throws IOException {
         this.stompClient = stompClient;
-        this.managerConnection = new DynamicManagerConnection("xenu", "jicksta", "ohairoflcopter");
+        this.managerConnection = new DynamicManagerConnection("twinners.us", "admin", "leiden");
     }
 
     public void run() throws IOException, AuthenticationFailedException, TimeoutException, InterruptedException {
-        stompClient.subscribe("bridge", this);
+        stompClient.subscribe("amiactions", this);
         managerConnection.addEventListener(this);
         managerConnection.login();
     }
@@ -46,7 +43,7 @@ public class StompToManagerBridge implements ManagerEventListener,
     // Forward Asterisk Manager Interface events to Stomp
     public void onManagerEvent(ManagerEvent event) {
         System.out.println("Handling event: " + event.toString());
-        this.stompClient.send("ami", "event", event.properties());
+        this.stompClient.send("amievents", "", event.properties());
     }
 
     // Forward Stomp messages to the Asterisk Manager Interface
@@ -68,16 +65,6 @@ public class StompToManagerBridge implements ManagerEventListener,
     }
 
     private Map<String, String> stripStompRelatedHeaders(Map<String, String> headers) {
-        /*Action: DBPut
-        actionid: 10804947_4#2320607
-        key: foo
-        content-length: 5
-        value: bar
-        destination: bridge
-        family: uberfam
-        content-type: text/plain; charset=UTF-8
-        message-id: msg-#stompcma-144
-        */
         Map<String,String> newHeaders = new HashMap<String,String>();
         for(String key : headers.keySet()) {
             if(key.equals("content-length") || key.equals("message-id") || key.equals("content-type")) continue;
