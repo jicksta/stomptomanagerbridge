@@ -31,7 +31,7 @@ public class StompToManagerBridge implements ManagerEventListener,
 
     public StompToManagerBridge(Client stompClient) throws IOException {
         this.stompClient = stompClient;
-        this.managerConnection = new DynamicManagerConnection("twinners.us", "admin", "leiden");
+        this.managerConnection = new DynamicManagerConnection("localhost", "admin", "leiden");
     }
 
     public void run() throws IOException, AuthenticationFailedException, TimeoutException, InterruptedException {
@@ -78,7 +78,7 @@ public class StompToManagerBridge implements ManagerEventListener,
         while (!successful) {
             Client stompClient;
             try {
-                stompClient = new Client("twinners.us", 61613, "testing", "f13fa60c2ba5");
+                stompClient = new Client("localhost", 61613, "testing", "f13fa60c2ba5");
             } catch (IOException ioe) {
                 System.err.println("Failed to connect to Stomp! Retrying in " +
                         String.valueOf(RECONNECT_RETRY_TIMEOUT_IN_SECONDS) + " seconds.");
