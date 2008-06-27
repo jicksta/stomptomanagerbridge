@@ -154,7 +154,6 @@ class EventBuilderImpl implements EventBuilder
             eventType = "userevent" + eventType;
         }
 		
-		System.out.println("FIRST REGISTEREVENT CLASS WITH " + className);
         registerEventClass(eventType, clazz);
     }
 
@@ -177,12 +176,10 @@ class EventBuilderImpl implements EventBuilder
             throw new IllegalArgumentException(clazz + " is not a ManagerEvent");
         }
 		
-		System.out.println("EXPLOSION NOT AFTER assignemfrom");
         if ((clazz.getModifiers() & Modifier.ABSTRACT) != 0)
         {
             throw new IllegalArgumentException(clazz + " is abstract");
         }
-		System.out.println("EXPLOSION NOT AFTER abstract cehck ");
 
         try
         {
@@ -192,18 +189,14 @@ class EventBuilderImpl implements EventBuilder
         {
             throw new IllegalArgumentException(clazz + " has no usable constructor");
         }
-		System.out.println("EXPLOSION NOT AFTER constructor check");
 
         if ((defaultConstructor.getModifiers() & Modifier.PUBLIC) == 0)
         {
             throw new IllegalArgumentException(clazz + " has no public default constructor");
         }
-		System.out.println("EXPLOSION NOT AFTER  default constructor?");
 
         registeredEventClasses.put(eventType.toLowerCase(), clazz);
-		System.out.println("EXPLOSION NOT AFTER additng to map");
 		
-		System.out.println("DONE REGISTEREVENT CLASS WITH " + eventType);
         logger.debug("Registered event type '" + eventType + "' (" + clazz + ")");
     }
 
