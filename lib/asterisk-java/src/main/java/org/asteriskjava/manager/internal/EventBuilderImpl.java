@@ -33,7 +33,7 @@ import org.asteriskjava.util.ReflectionUtil;
  * Default implementation of the EventBuilder interface.
  *
  * @author srt
- * @version $Id: EventBuilderImpl.java 1062 2008-05-20 07:23:40Z srt $
+ * @version $Id$
  * @see org.asteriskjava.manager.event.ManagerEvent
  */
 class EventBuilderImpl implements EventBuilder
@@ -68,6 +68,9 @@ class EventBuilderImpl implements EventBuilder
         registerEventClass(CdrEvent.class);
         registerEventClass(ChannelReloadEvent.class);
         registerEventClass(ChannelUpdateEvent.class);
+        
+        registerEventClass(ConferenceDTMFEvent.class);
+        
         registerEventClass(DbGetResponseEvent.class);
         registerEventClass(DialEvent.class);
         registerEventClass(DndStateEvent.class);
@@ -150,7 +153,8 @@ class EventBuilderImpl implements EventBuilder
         {
             eventType = "userevent" + eventType;
         }
-
+		
+		System.out.println("FIRST REGISTEREVENT CLASS WITH " + className);
         registerEventClass(eventType, clazz);
     }
 
@@ -172,11 +176,13 @@ class EventBuilderImpl implements EventBuilder
         {
             throw new IllegalArgumentException(clazz + " is not a ManagerEvent");
         }
-
+		
+		System.out.println("EXPLOSION NOT AFTER assignemfrom");
         if ((clazz.getModifiers() & Modifier.ABSTRACT) != 0)
         {
             throw new IllegalArgumentException(clazz + " is abstract");
         }
+		System.out.println("EXPLOSION NOT AFTER abstract cehck ");
 
         try
         {
@@ -186,14 +192,18 @@ class EventBuilderImpl implements EventBuilder
         {
             throw new IllegalArgumentException(clazz + " has no usable constructor");
         }
+		System.out.println("EXPLOSION NOT AFTER constructor check");
 
         if ((defaultConstructor.getModifiers() & Modifier.PUBLIC) == 0)
         {
             throw new IllegalArgumentException(clazz + " has no public default constructor");
         }
+		System.out.println("EXPLOSION NOT AFTER  default constructor?");
 
         registeredEventClasses.put(eventType.toLowerCase(), clazz);
-
+		System.out.println("EXPLOSION NOT AFTER additng to map");
+		
+		System.out.println("DONE REGISTEREVENT CLASS WITH " + eventType);
         logger.debug("Registered event type '" + eventType + "' (" + clazz + ")");
     }
 
