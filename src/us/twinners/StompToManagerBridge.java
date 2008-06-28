@@ -96,6 +96,7 @@ public class StompToManagerBridge implements ManagerEventListener,
                 continue;
             }
             try {
+                System.out.println("Running now!");
                 manager.run();
             } catch (Exception ex) {
                 System.err.println("Exception while running bridge! Retrying in" +

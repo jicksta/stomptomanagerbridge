@@ -28,6 +28,14 @@ public class ConferenceDTMFEvent extends ManagerEvent {
         return this.key;
     }
 
+	public void setConferencename(String name) {
+		this.conferenceName = name;
+	}
+
+	public String getConferencename() {
+		return this.conferenceName;
+	}
+
     public void setKey(String key) {
         this.key = key;
     }
